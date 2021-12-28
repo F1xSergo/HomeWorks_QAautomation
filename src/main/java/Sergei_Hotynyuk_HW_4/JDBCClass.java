@@ -1,5 +1,6 @@
 package Sergei_Hotynyuk_HW_4;
 
+import java.math.BigDecimal;
 import java.sql.*;
 
 public class JDBCClass {
@@ -7,7 +8,6 @@ public class JDBCClass {
     static final String USER = "postgres";
     static final String PASS = "123456";
 
-    // private static ResultSet rs;
 
     Connection connection = null;
     Statement statement = null;
@@ -33,6 +33,25 @@ public class JDBCClass {
         }
         return connection;
     }
+
+//    public void createDB(String createDataBase) throws SQLException {
+//        try {
+//            connection = getDBConnection();
+//            statement = connection.createStatement();
+//
+//// sql запрос
+//            statement.execute(createDataBase);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (statement != null) {
+//                statement.close();
+//            }
+//            if (connection != null) {
+//                connection.close();
+//            }
+//        }
+//    }
 
     public void createDbUserTable(String createTableSQL) throws SQLException {
         try {
@@ -77,64 +96,57 @@ public class JDBCClass {
         }
     }
 
-    public void transaction(String transaction) throws SQLException {
-        try {
-            connection = getDBConnection();
-            statement = connection.createStatement();
-            statement.executeUpdate(transaction);
-            System.out.println("Transaction successful");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        }
-    }
 
-    public void transaction2(int user_id, int operation, String currency) throws SQLException {
+    public void transaction2(int user_id, double operation, String currency) throws SQLException {
 
-        // String select = "SELECT * FROM accounts WHERE accounts.user_id=? AND accounts.currency~*?";
+        String select = "SELECT * FROM accounts WHERE accounts.user_id=? AND accounts.currency~*?";
         String update = "UPDATE accounts SET balance=? WHERE accounts.account_id=? AND accounts.currency~*?";
-
         String transaction = "INSERT INTO TRANSACTIONS(TRANSACTION_ID, ACCOUNT_ID, AMOUNT) VALUES(?, ?, ?)";
+
+
         int account_id = 0;
-        int tr_id = 0;
-        int balance = 0;
+        double balance = 0;
 
         try {
             connection = getDBConnection();
             statement = connection.createStatement();
+
+            PreparedStatement ps = connection.prepareStatement(select);
             connection.setAutoCommit(false);
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM accounts ");
+
+            ps.setInt(1, user_id);
+            ps.setString(2, currency);
+
+            ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
                 account_id = resultSet.getInt(1);
-                balance = resultSet.getInt(3);
+                balance = Double.parseDouble(String.valueOf(resultSet.getBigDecimal(3)));
 
             }
             balance += operation;
+
             PreparedStatement pstmt = connection.prepareStatement(update);
 
-            pstmt.setInt(1, balance);
-            pstmt.setInt(2, user_id);
+            pstmt.setBigDecimal(1, BigDecimal.valueOf(balance));
+            pstmt.setInt(2, account_id);
             pstmt.setString(3, currency);
 
             pstmt.executeUpdate();
+
             pstmt = connection.prepareStatement(transaction);
 
             pstmt.setInt(1, (int) (Math.random() * 1000));
             pstmt.setInt(2, account_id);
-            pstmt.setInt(3, operation);
+            pstmt.setBigDecimal(3, BigDecimal.valueOf(operation));
 
             pstmt.executeUpdate();
+
             connection.commit();
 
             System.out.println("Transaction successful");
         } catch (SQLException e) {
+            connection.rollback();
             e.printStackTrace();
         } finally {
             if (statement != null) {
