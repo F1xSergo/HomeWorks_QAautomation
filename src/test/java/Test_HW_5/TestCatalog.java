@@ -18,7 +18,6 @@ package Test_HW_5;
 //6. Попробовать включить режим эмуляции мобильного устройства, при необходимости доработать тесты для совместимости с
 // таким режимом. (Опционально)
 
-import Sergei_Hotynyuk_HW_5.CatalogPage;
 import Sergei_Hotynyuk_HW_5.MainPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,23 +26,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codeborne.selenide.Selenide.open;
-
 public class TestCatalog extends MainTest {
     private final static String BASE_URL = "https://www.onliner.by/";
-    private final static String CATALOG_URL = "https://catalog.onliner.by/";
+    private final static List<String> EXPECTED_SECTIONS = new ArrayList<>(Arrays.asList("Электроника", "Компьютеры и сети", "Бытовая техника", "Стройка и ремонт", "Дом и сад", "Авто и мото", "Красота и спорт", "Детям и мамам", "Работа и офис", "Еда"));
+    private final static List<String> EXPECTED_SECTIONS_IN_COMPUTER_AND_NETWORKS = new ArrayList<>(Arrays.asList("Ноутбуки, компьютеры, мониторы", "Комплектующие", "Хранение данных", "Сетевое оборудование"));
 
     @Test
     public void checkInCatalogSections() {
-        MainPage mainPage = open(BASE_URL, MainPage.class);
-        mainPage.enterCatalog();
-        CatalogPage catalogPage = new CatalogPage();
+        List<String> actualSections = new MainPage(BASE_URL)
+                .enterCatalog()
+                .getSpanFromCatalogSections();
 
-        List<String> actualSection = catalogPage.getSpanFromCatalogSections();
-        List<String> expectedSections = new ArrayList<>(Arrays.asList("Электроника", "Компьютеры и сети",
-                "Бытовая техника", "Стройка и ремонт", "Дом и сад", "Авто и мото", "Красота и спорт", "Детям и мамам", "Работа и офис", "Еда"));
-
-        //System.out.println(actualSection);
-        Assertions.assertEquals(expectedSections, actualSection);
+        Assertions.assertEquals(EXPECTED_SECTIONS, actualSections);
     }
+
+    @Test
+    public void checkCatalogSectionComputerAndNetwork() {
+
+        List<String> actualSectionsInComputerAndNetwork = new MainPage(BASE_URL)
+                .enterCatalogAndNetworks()
+                .getDivFromComputerAndNetworks();
+
+        boolean actualSectionsInComputerAndNetwork1 = (new MainPage(BASE_URL)
+                .isVisibleVerticalSection()
+                .isVisible());
+        //проверяем или вертикальная секция появляется
+        Assertions.assertTrue(actualSectionsInComputerAndNetwork1);
+        //проверяем или содержатся элементы в Компьютеры и сети имеются определенные секции
+        Assertions.assertTrue(actualSectionsInComputerAndNetwork.containsAll(EXPECTED_SECTIONS_IN_COMPUTER_AND_NETWORKS));
+    }
+    
 }
