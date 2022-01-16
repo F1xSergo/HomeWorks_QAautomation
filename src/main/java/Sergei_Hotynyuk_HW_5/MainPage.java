@@ -10,6 +10,7 @@ import static com.codeborne.selenide.Selenide.$x;
 public class MainPage {
     private SelenideElement catalogStr = $x("//span[@class='b-main-navigation__text']");
     private SelenideElement catalogStrComputerAndNetworks = $(byText("Компьютеры и сети"));
+    private SelenideElement clickAccessories = $(byText("Комплектующие"));
 
 
     public MainPage(String url) {
@@ -30,6 +31,13 @@ public class MainPage {
     public CatalogPage isVisibleVerticalSection() {
         catalogStr.scrollIntoView(false).click();
         catalogStrComputerAndNetworks.scrollIntoView(false).click();
+        return new CatalogPage();
+    }
+
+    public CatalogPage enterCatalogAndNetworksAndClickAccessories() {
+        catalogStr.scrollIntoView(false).click();
+        catalogStrComputerAndNetworks.scrollIntoView(false).click();
+        clickAccessories.click();
         return new CatalogPage();
     }
 }

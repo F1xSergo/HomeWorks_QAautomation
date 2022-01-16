@@ -18,6 +18,7 @@ package Test_HW_5;
 //6. Попробовать включить режим эмуляции мобильного устройства, при необходимости доработать тесты для совместимости с
 // таким режимом. (Опционально)
 
+import Sergei_Hotynyuk_HW_5.CatalogPage;
 import Sergei_Hotynyuk_HW_5.MainPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -43,17 +44,24 @@ public class TestCatalog extends MainTest {
     @Test
     public void checkCatalogSectionComputerAndNetwork() {
 
+
         List<String> actualSectionsInComputerAndNetwork = new MainPage(BASE_URL)
                 .enterCatalogAndNetworks()
                 .getDivFromComputerAndNetworks();
 
-        boolean actualSectionsInComputerAndNetwork1 = (new MainPage(BASE_URL)
-                .isVisibleVerticalSection()
-                .isVisible());
+        CatalogPage verticalSectionsIsVisible = new CatalogPage();
+
         //проверяем или вертикальная секция появляется
-        Assertions.assertTrue(actualSectionsInComputerAndNetwork1);
+        Assertions.assertTrue(verticalSectionsIsVisible.isVisible());
         //проверяем или содержатся элементы в Компьютеры и сети имеются определенные секции
         Assertions.assertTrue(actualSectionsInComputerAndNetwork.containsAll(EXPECTED_SECTIONS_IN_COMPUTER_AND_NETWORKS));
     }
-    
+
+    @Test
+    public void checkAccessories() {
+        CatalogPage actualInfoAccessories = new MainPage(BASE_URL)
+                .enterCatalogAndNetworksAndClickAccessories();
+
+        Assertions.assertTrue(actualInfoAccessories.accessoriesPriceAndNameisNotEmpty());
+    }
 }
