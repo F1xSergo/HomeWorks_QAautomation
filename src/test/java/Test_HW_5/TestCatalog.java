@@ -33,7 +33,7 @@ public class TestCatalog extends MainTest {
     private final static List<String> EXPECTED_SECTIONS_IN_COMPUTER_AND_NETWORKS = new ArrayList<>(Arrays.asList("Ноутбуки, компьютеры, мониторы", "Комплектующие", "Хранение данных", "Сетевое оборудование"));
 
     @Test
-    public void checkInCatalogSections() {
+    public void testCheckInCatalogSections() {
         List<String> actualSections = new MainPage(BASE_URL)
                 .enterCatalog()
                 .getSpanFromCatalogSections();
@@ -42,8 +42,7 @@ public class TestCatalog extends MainTest {
     }
 
     @Test
-    public void checkCatalogSectionComputerAndNetwork() {
-
+    public void testCheckCatalogSectionComputerAndNetwork() {
 
         List<String> actualSectionsInComputerAndNetwork = new MainPage(BASE_URL)
                 .enterCatalogAndNetworks()
@@ -58,7 +57,7 @@ public class TestCatalog extends MainTest {
     }
 
     @Test
-    public void checkAccessories() {
+    public void testCheckAccessories() {
         CatalogPage actualInfoAccessories = new MainPage(BASE_URL)
                 .enterCatalogAndNetworksAndClickAccessories();
 
