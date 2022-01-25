@@ -1,6 +1,7 @@
 package Test_Final_Project;
 
 import Sergei_Hotynyuk_Final_Project.MainPage;
+import Sergei_Hotynyuk_Final_Project.MonitorsPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,12 +14,19 @@ public class Test_Ui extends MainTest {
     private final static List<String> EXPECTED_ELEMENTS_IN_SECTION_ALL = new ArrayList<>(Arrays.asList("Digital Content & Devices", "Shop By Department", "Programs & Features", "Help & Settings"));
 
     @Test
-    public void testSectionAll(){
-       List<String> elementsInSectionAll = new MainPage(BASE_URL)
-               .enterInSectionAll()
-               .getDivElementsFromSectionAll();
+    public void testSectionAll() {
+        List<String> elementsInSectionAll = new MainPage(BASE_URL)
+                .enterInSectionAll()
+                .getDivElementsFromSectionAll();
 
-        Assertions.assertTrue(elementsInSectionAll.containsAll(EXPECTED_ELEMENTS_IN_SECTION_ALL));
+       Assertions.assertTrue(elementsInSectionAll.containsAll(EXPECTED_ELEMENTS_IN_SECTION_ALL));
+    }
 
+    @Test
+    public void testNavigationThroughSection() {
+        MonitorsPage elementsInSectionShopByDepartament = new MainPage(BASE_URL)
+                .navigationToSectionMonitors();
+
+        int o = 1;
     }
 }
