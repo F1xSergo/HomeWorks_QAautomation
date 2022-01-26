@@ -1,9 +1,11 @@
 package Test_Final_Project;
 
 import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.BeforeAll;
 
 abstract public class MainTest {
-    public void setUp() {
+    @BeforeAll
+    static void setUp() {
         Configuration.browser = "chrome";
         Configuration.browserSize = "1920x1080";
         System.setProperty("webdriver.chrome.driver", "chromedriver.exe");

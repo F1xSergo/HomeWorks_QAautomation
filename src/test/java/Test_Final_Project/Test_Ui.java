@@ -1,7 +1,7 @@
 package Test_Final_Project;
 
 import Sergei_Hotynyuk_Final_Project.MainPage;
-import Sergei_Hotynyuk_Final_Project.MonitorsPage;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,9 +24,11 @@ public class Test_Ui extends MainTest {
 
     @Test
     public void testNavigationThroughSection() {
-        MonitorsPage elementsInSectionShopByDepartament = new MainPage(BASE_URL)
-                .navigationToSectionMonitors();
+        SelenideElement sectionMonitors = new MainPage(BASE_URL)
+                .navigationToSectionMonitors()
+                .sectionMonitorsIsNotEmpty();
 
-        int o = 1;
+        Assertions.assertTrue(sectionMonitors.exists());
+
     }
 }
