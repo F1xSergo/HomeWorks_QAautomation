@@ -1,13 +1,18 @@
 package Test_Final_Project;
 
-import Sergei_Hotynyuk_Final_Project.MainPage;
+import Sergei_Hotynyuk_Final_Project.Pages.CartPage;
+import Sergei_Hotynyuk_Final_Project.Pages.MainPage;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class Test_Ui extends MainTest {
     private final static String BASE_URL = "https://www.amazon.com/";
@@ -18,8 +23,7 @@ public class Test_Ui extends MainTest {
         List<String> elementsInSectionAll = new MainPage(BASE_URL)
                 .enterInSectionAll()
                 .getDivElementsFromSectionAll();
-
-       Assertions.assertTrue(elementsInSectionAll.containsAll(EXPECTED_ELEMENTS_IN_SECTION_ALL));
+        Assertions.assertTrue(elementsInSectionAll.containsAll(EXPECTED_ELEMENTS_IN_SECTION_ALL));
     }
 
     @Test
@@ -29,6 +33,29 @@ public class Test_Ui extends MainTest {
                 .sectionMonitorsIsNotEmpty();
 
         Assertions.assertTrue(sectionMonitors.exists());
-
     }
+
+    @CsvSource({"Lg ultragear, 'LG 27GL850-B 27 Inch Ultragear QHD Nano IPS 1ms NVIDIA G-Sync Compatible Gaming Monitor, Black'"})
+    @ParameterizedTest
+    public void testSearchItem(String serchItem, String expectedNameInCart) {
+        CartPage cart = new MainPage(BASE_URL)
+                .enterTextToSearchString(serchItem)
+                .selectItemByText(expectedNameInCart)
+                .addToCart()
+                .openCart();
+
+        String actualNameInCart = cart.getItemNameInCart();
+
+//        Assertions.assertEquals(expectedNameInCart, actualNameInCart);
+
+        assertAll(
+                //проверка что в корзине не пусто
+                () -> Assertions.assertTrue(cart.checkCartIsNotEmpty()),
+                //проверяем что содержится нужное имя(необязательно)
+                () -> Assertions.assertTrue(cart.checkItemExistInCart(expectedNameInCart)),
+                //сравниваем что в корзине именно ожидаемы результат совпадает с актульным
+                () -> Assertions.assertEquals(expectedNameInCart, actualNameInCart)
+        );
+    }
+
 }

@@ -1,4 +1,4 @@
-package Sergei_Hotynyuk_Final_Project;
+package Sergei_Hotynyuk_Final_Project.Pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
