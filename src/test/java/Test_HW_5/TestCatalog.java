@@ -31,7 +31,10 @@ public class TestCatalog extends MainTest {
     private final static String BASE_URL = "https://www.onliner.by/";
     private final static List<String> EXPECTED_SECTIONS = new ArrayList<>(Arrays.asList("Электроника", "Компьютеры и сети", "Бытовая техника", "Стройка и ремонт", "Дом и сад", "Авто и мото", "Красота и спорт", "Детям и мамам", "Работа и офис", "Еда"));
     private final static List<String> EXPECTED_SECTIONS_IN_COMPUTER_AND_NETWORKS = new ArrayList<>(Arrays.asList("Ноутбуки, компьютеры, мониторы", "Комплектующие", "Хранение данных", "Сетевое оборудование"));
+@Test
+public  void sf(){
 
+}
     @Test
     public void testCheckInCatalogSections() {
         List<String> actualSections = new MainPage(BASE_URL)

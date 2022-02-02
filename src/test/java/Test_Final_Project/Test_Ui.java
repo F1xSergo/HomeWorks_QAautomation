@@ -2,8 +2,11 @@ package Test_Final_Project;
 
 import Sergei_Hotynyuk_Final_Project.Pages.CartPage;
 import Sergei_Hotynyuk_Final_Project.Pages.MainPage;
+import Test_Final_Project.ConfProperties.ConfProperties;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Description;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,8 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class Test_Ui extends MainTest {
     private final static String BASE_URL = "https://www.amazon.com/";
-    private final static List<String> EXPECTED_ELEMENTS_IN_SECTION_ALL = new ArrayList<>(Arrays.asList("Digital Content & Devices", "Shop By Department", "Programs & Features", "Help & Settings"));
+    private final static List<String> EXPECTED_ELEMENTS_IN_SECTION_ALL =
+            new ArrayList<>(Arrays.asList("Digital Content & Devices", "Shop By Department", "Programs & Features", "Help & Settings"));
+    private static final String email = ConfProperties.getProperty("email");
+    private static final String password = ConfProperties.getProperty("password");
 
+
+    @Description("Тест проверяет или в секции находятся нужные элементы")
+    @DisplayName("Тест проверяет или в секции находятся нужные элементы")
     @Test
     public void testSectionAll() {
         List<String> elementsInSectionAll = new MainPage(BASE_URL)
@@ -58,4 +67,14 @@ public class Test_Ui extends MainTest {
         );
     }
 
+    @Test
+    public void testAuthorization() {
+        String expectedName = new MainPage(BASE_URL)
+                .authorization()
+                .enterLogAndPass(email, password)
+                .checkName();
+//проверяем что мы авторизованы, и наш юзер Sergey
+        Assertions.assertTrue(expectedName.endsWith("Sergey"));
+        Assertions.assertTrue(expectedName.contains("Sergey"));
+    }
 }
