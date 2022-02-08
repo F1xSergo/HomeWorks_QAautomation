@@ -51,4 +51,5 @@ public class MainPage {
         sectionSigIn.shouldHave(Condition.visible).click();
         return new LoginPage();
     }
+
 }

@@ -1,5 +1,6 @@
 package Test_Final_Project;
 
+import Sergei_Hotynyuk_Final_Project.Pages.AddressPage;
 import Sergei_Hotynyuk_Final_Project.Pages.CartPage;
 import Sergei_Hotynyuk_Final_Project.Pages.MainPage;
 import Test_Final_Project.ConfProperties.ConfProperties;
@@ -35,6 +36,8 @@ public class Test_Ui extends MainTest {
         Assertions.assertTrue(elementsInSectionAll.containsAll(EXPECTED_ELEMENTS_IN_SECTION_ALL));
     }
 
+    @Description("Тест проверяет или в секции 'Monitors' находятся товары")
+    @DisplayName("Тест проверяет или в секции 'Monitors' находятся товары")
     @Test
     public void testNavigationThroughSection() {
         SelenideElement sectionMonitors = new MainPage(BASE_URL)
@@ -44,6 +47,8 @@ public class Test_Ui extends MainTest {
         Assertions.assertTrue(sectionMonitors.exists());
     }
 
+    @Description("Тест проверят или юзер находит товар через поиск, кладет его в корзину и проверят, что в корзине именно тот товар")
+    @DisplayName("Тест проверят или юзер находит товар через поиск, кладет его в корзину и проверят, что в корзине именно тот товар")
     @CsvSource({"Lg ultragear, 'LG 27GL850-B 27 Inch Ultragear QHD Nano IPS 1ms NVIDIA G-Sync Compatible Gaming Monitor, Black'"})
     @ParameterizedTest
     public void testSearchItem(String serchItem, String expectedNameInCart) {
@@ -54,7 +59,6 @@ public class Test_Ui extends MainTest {
                 .openCart();
 
         String actualNameInCart = cart.getItemNameInCart();
-
 //        Assertions.assertEquals(expectedNameInCart, actualNameInCart);
 
         assertAll(
@@ -67,6 +71,8 @@ public class Test_Ui extends MainTest {
         );
     }
 
+    @Description("Тест проверяет успешна ли авторизация и доп проверка, что авторизован 'Sergey' ")
+    @DisplayName("Тест проверяет успешна ли авторизация и доп проверка, что авторизован 'Sergey' ")
     @Test
     public void testAuthorization() {
         String expectedName = new MainPage(BASE_URL)
@@ -76,5 +82,58 @@ public class Test_Ui extends MainTest {
 //проверяем что мы авторизованы, и наш юзер Sergey
         Assertions.assertTrue(expectedName.endsWith("Sergey"));
         Assertions.assertTrue(expectedName.contains("Sergey"));
+    }
+
+    @Description("Тест проверяет что авторизоция с неправильным логином выводит предупреждение ")
+    @DisplayName("Тест проверяет что авторизоция с неправильным логином выводит предупреждение ")
+    @Test
+    public void testFalseEmailAuthorization() {
+        boolean expectedName = new MainPage(BASE_URL)
+                .authorization()
+                .enterBadLog("BadEmail", password)
+                .checkAlertForEmail();
+        Assertions.assertTrue(expectedName);
+    }
+
+    @Description("Тест проверяет что авторизоция с неправильным паролем выводит предупреждение ")
+    @DisplayName("Тест проверяет что авторизоция с неправильным паролем выводит предупреждение ")
+    @Test
+    public void testFalsePassAuthorization() {
+        boolean expectedName = new MainPage(BASE_URL)
+                .authorization()
+                .enterLogAndPass(email, "BadPassword")
+                .checkAlertForPass();
+        Assertions.assertTrue(expectedName);
+    }
+
+    @Test
+    public void testAddAddress() {
+        AddressPage addressPage = new MainPage(BASE_URL)
+                .authorization()
+                .enterLogAndPass(email, password)
+                .enterToAddressSection()
+                .goToAddressForm()
+                .addAddressButton()
+                .enterAddressDetails("Sergey Hot", "Platonova", "Minsk", "220005", "375298003301");
+
+        String actualCheckAddressSaveBanner = addressPage.checkAddressSave();
+
+        System.out.println(actualCheckAddressSaveBanner);
+        Assertions.assertEquals("Address saved", actualCheckAddressSaveBanner);
+    }
+
+    @Test
+    public void testRemoveAddress() {
+        AddressPage addressPage = new MainPage(BASE_URL)
+                .authorization()
+                .enterLogAndPass(email, password)
+                .enterToAddressSection()
+                .goToAddressForm()
+                .removeAddressButton();
+
+        String actualCheckAddressRemoveBanner = addressPage.checkAddressSave();
+
+        System.out.println(actualCheckAddressRemoveBanner);
+        Assertions.assertEquals("Address removed", actualCheckAddressRemoveBanner);
     }
 }
