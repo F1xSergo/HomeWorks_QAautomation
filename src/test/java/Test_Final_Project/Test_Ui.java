@@ -2,6 +2,7 @@ package Test_Final_Project;
 
 import Sergei_Hotynyuk_Final_Project.Pages.AddressPage;
 import Sergei_Hotynyuk_Final_Project.Pages.CartPage;
+import Sergei_Hotynyuk_Final_Project.Pages.LoginPage;
 import Sergei_Hotynyuk_Final_Project.Pages.MainPage;
 import Test_Final_Project.ConfProperties.ConfProperties;
 import com.codeborne.selenide.SelenideElement;
@@ -75,13 +76,17 @@ public class Test_Ui extends MainTest {
     @DisplayName("Тест проверяет успешна ли авторизация и доп проверка, что авторизован 'Sergey' ")
     @Test
     public void testAuthorization() {
-        String expectedName = new MainPage(BASE_URL)
+        LoginPage loginPage = new MainPage(BASE_URL)
                 .authorization()
-                .enterLogAndPass(email, password)
-                .checkName();
+                .enterLogAndPass(email, password);
+        String expectedName = loginPage.checkName();
+
 //проверяем что мы авторизованы, и наш юзер Sergey
         Assertions.assertTrue(expectedName.endsWith("Sergey"));
         Assertions.assertTrue(expectedName.contains("Sergey"));
+//добавить метод выхода из акк
+      new MainPage(BASE_URL)
+                .exitFromAccount();
     }
 
     @Description("Тест проверяет что авторизоция с неправильным логином выводит предупреждение ")
@@ -106,24 +111,30 @@ public class Test_Ui extends MainTest {
         Assertions.assertTrue(expectedName);
     }
 
+    @Description("Тест проверяет что адрес успешно добавлен")
+    @DisplayName("Тест проверяет что адрес успешно добавлен")
     @Test
-    public void testAddAddress() {
+    public void testAddAddress() throws InterruptedException {
         AddressPage addressPage = new MainPage(BASE_URL)
                 .authorization()
                 .enterLogAndPass(email, password)
                 .enterToAddressSection()
                 .goToAddressForm()
                 .addAddressButton()
-                .enterAddressDetails("Sergey Hot", "Platonova", "Minsk", "220005", "375298003301");
+                .enterAddressDetails("Sergey", "Platonova", "Minsk", "220005", "375298003301");
 
         String actualCheckAddressSaveBanner = addressPage.checkAddressSave();
 
-        System.out.println(actualCheckAddressSaveBanner);
         Assertions.assertEquals("Address saved", actualCheckAddressSaveBanner);
+
+        new MainPage(BASE_URL)
+                .exitFromAccount();
     }
 
+    @Description("Тест проверяет что адрес успешно удален")
+    @DisplayName("Тест проверяет что адрес успешно удален")
     @Test
-    public void testRemoveAddress() {
+    public void testRemoveAddress() throws InterruptedException {
         AddressPage addressPage = new MainPage(BASE_URL)
                 .authorization()
                 .enterLogAndPass(email, password)
@@ -133,7 +144,9 @@ public class Test_Ui extends MainTest {
 
         String actualCheckAddressRemoveBanner = addressPage.checkAddressSave();
 
-        System.out.println(actualCheckAddressRemoveBanner);
         Assertions.assertEquals("Address removed", actualCheckAddressRemoveBanner);
+        
+        new MainPage(BASE_URL)
+                .exitFromAccount();
     }
 }

@@ -12,12 +12,15 @@ import static com.codeborne.selenide.Selenide.*;
 
 
 public class MainPage {
-    private final SelenideElement sectionAll = $x("//span[@class='hm-icon-label']");
+    private final SelenideElement sectionAll = $x("//a[@id='nav-hamburger-menu']");
     private final SelenideElement sectionComputers = $x("//a[@class='hmenu-item'][@data-menu-id = '6']");
     private final SelenideElement sectionMonitors = $(byText("Monitors"));
     private final SelenideElement searchText = $x("//input[@type='text']");
     private final ElementsCollection itemLink = $$x("//a");
-    private final SelenideElement sectionSigIn = $x("//a[@class='nav-a nav-a-2   nav-progressive-attribute']");
+    private final SelenideElement sectionSigIn = $x("//a[@id='nav-link-accountList']");
+    //private final SelenideElement buttonSigIn = $x("//a[@class='nav-a nav-a-2   nav-progressive-attribute']");
+    private final SelenideElement buttonSigIn = $(byText("Sign in"));
+    private final SelenideElement exitButton = $x("//span[contains(text(),'Sign Out')]");
 
 
     public MainPage(String url) {
@@ -48,8 +51,12 @@ public class MainPage {
     }
 
     public LoginPage authorization() {
-        sectionSigIn.shouldHave(Condition.visible).click();
+        sectionSigIn.shouldHave(Condition.visible).hover();
+        buttonSigIn.click();
         return new LoginPage();
     }
-
+    public void exitFromAccount() {
+        sectionSigIn.shouldHave(Condition.visible).hover();
+        exitButton.click();
+    }
 }
