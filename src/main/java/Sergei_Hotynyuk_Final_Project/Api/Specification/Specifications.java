@@ -1,4 +1,4 @@
-package Test_Final_Project.Specification;
+package Sergei_Hotynyuk_Final_Project.Api.Specification;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;

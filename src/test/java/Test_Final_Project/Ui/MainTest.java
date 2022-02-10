@@ -1,4 +1,4 @@
-package Test_Final_Project;
+package Test_Final_Project.Ui;
 
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
